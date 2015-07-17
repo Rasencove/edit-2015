@@ -29,7 +29,7 @@ public class BrickCommands extends AbstractReceiveListener {
 
     @Override
     protected void onFullTextMessage(WebSocketChannel channel, BufferedTextMessage message) {
-    	
+
     	/*
         String msg = message.getData();
         if(msg.equals("terminate")){
@@ -43,23 +43,23 @@ public class BrickCommands extends AbstractReceiveListener {
         }
         else if(directControl){
         	switch (msg){
-        	
+
         	case "grab":
         		PickupItem();
         		break;
-        		
+
         	case "drop":
         		DropItem();
         		break;
-        		
+
         	case "turn right":
         		Turn("right");
         		break;
-        		
+
         	case "turn left":
         		Turn("left");
         		break;
-        		
+
         	case "nocontrol":
         		directControl = false;
         		break;
@@ -72,10 +72,10 @@ public class BrickCommands extends AbstractReceiveListener {
 	    	MoveToLocation(order);
         }
     	*/
-    	
+
     	String json = message.getData();
         Log.info("Trying to parse JSON:" + json);
-       
+
         try {
         	final JsonObject jsonCommand = Json.createReader(new StringReader(json)).readObject();
             System.out.println("Parsed: " + jsonCommand.toString());
@@ -83,9 +83,15 @@ public class BrickCommands extends AbstractReceiveListener {
             //WebSockets.sendText("[ev3.brick] Received command " + command, channel, null);
             if (command.isEmpty())
                 Log.info("No command given.");
-            else if (command.equals("MoveToLocation")) {
+            else if (command.equals("get")) {
                 final String data = jsonCommand.getString("data");
                 Order order = ParseCommand(data);
+                order.getItem = 1;
+                MoveToLocation(order);
+            } else if (command.equals("put")) {
+                final String data = jsonCommand.getString("data");
+                Order order = ParseCommand(data);
+                order.getItem = 0;
                 MoveToLocation(order);
             } else if (command.equals("terminate")) {
                 Log.info("Press escape to exit.");
@@ -99,15 +105,15 @@ public class BrickCommands extends AbstractReceiveListener {
             	case "grab":
             		PickupItem();
             		break;
-            		
+
             	case "drop":
             		DropItem();
             		break;
-            		
+
             	case "turn right":
             		Turn("right");
             		break;
-            		
+
             	case "turn left":
             		Turn("left");
             		break;
@@ -118,7 +124,7 @@ public class BrickCommands extends AbstractReceiveListener {
             		Forward(360);
             		Delay.msDelay(howFar*1000);
             		break;
-            		
+
             	case "nocontrol":
             		directControl = false;
             		break;
@@ -135,38 +141,13 @@ public class BrickCommands extends AbstractReceiveListener {
     private Order ParseCommand(String message) {
     	int i = message.indexOf(";");
     	int j = message.indexOf(";", i+1);
-    	int k = message.indexOf(";", j+1);
     	Order order = new Order();
     	order.x = Integer.parseInt(message.substring(0, i));
     	order.y = Integer.parseInt(message.substring(i+1, j));
-    	order.side = Integer.parseInt(message.substring(j+1, k));
-    	order.getItem = Integer.parseInt(message.substring(k+1));
+    	order.side = Integer.parseInt(message.substring(j+1));
         return order;
     }
-    
-    /*
-    private Integer ParseX(String message) {
-    	int i = message.indexOf(";");
-    	int x = Integer.parseInt(message.substring(0, i));
-        return x;
-    }
-    
-    private Integer ParseY(String message) {
-    	int i = message.indexOf(";");
-    	int j = message.indexOf(";", i);
-    	int y = Integer.parseInt(message.substring(i, j));
-        return y;
-    }
-    
-    private Integer ParseSide(String message) {
-    	int i = message.indexOf(";");
-    	int j = message.indexOf(";", i);
-    	int side = Integer.parseInt(message.substring(j));
-        return side;
-    }
-    
-    */
-    
+
     private void MoveToLocation(Order order) {
         // Send robot to X Y
     	Boolean sideOfStorage = true;
@@ -178,9 +159,9 @@ public class BrickCommands extends AbstractReceiveListener {
         Sound.beepSequenceUp();
         Log.info("Sending robot to location");
         //WebSockets.sendText("[ev3.brick] > Sending robot to location." , channel, null);
-        
+
         /*
-        
+
         ////////move to location
 
         if(order.getItem == 0)
@@ -201,15 +182,15 @@ public class BrickCommands extends AbstractReceiveListener {
         	Turn("left");
         else
         	Turn("right");
-        	
+
         if(order.getItem == 1)
         	PickupItem();
         else
         	DropItem();
-        	
+
         ////////move to exit
-        
-        
+
+
         if(order.side == 0)
         	Turn("left");
         else
@@ -217,7 +198,7 @@ public class BrickCommands extends AbstractReceiveListener {
         for(int i=0; i<order.x; i++){
         	MoveToNextIntersection();
         }
-        
+
         if(order.x < 0)
         	Turn("left");
         else
@@ -228,15 +209,15 @@ public class BrickCommands extends AbstractReceiveListener {
 
         //Motor.B.close();
         //Motor.C.close();
-        
-    	Motor.B.forward();
-    	Motor.C.forward();
-        
-        Button.LEDPattern(0);
-    	Delay.msDelay(10000);
 
-        Motor.B.stop();
-        Motor.C.stop();
+    	//Motor.B.forward();
+    	//Motor.C.forward();
+
+        Button.LEDPattern(0);
+    	Delay.msDelay(2000);
+
+        //Motor.B.stop();
+        //Motor.C.stop();
         Sound.beepSequence();
         Log.info("Robot at location.");
         //WebSockets.sendText("[ev3.brick] > Robot at location." , channel, null);
@@ -250,7 +231,7 @@ public class BrickCommands extends AbstractReceiveListener {
         Log.info("I'm home.");
     }
     */
-    
+
     private void PickupItem() {
         Log.info("Picking up item");
     	//move forward
@@ -283,11 +264,11 @@ public class BrickCommands extends AbstractReceiveListener {
         Button.LEDPattern(3);
         Log.info("Item dropped.");
     }
-    
+
     private void MoveToNextIntersection(){
     	//move until next yellow dot
     }
-    
+
     private void Turn(String direction){
     	if(direction.equals("right")){
     		//turn right
@@ -298,7 +279,7 @@ public class BrickCommands extends AbstractReceiveListener {
     	else {
     		//turn around
     	}
-    	
+
     }
     private static void ForwardTest(){
     	System.out.print("Press Back, when you want to stop!");

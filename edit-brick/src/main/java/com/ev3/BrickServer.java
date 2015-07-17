@@ -27,9 +27,9 @@ public class BrickServer {
     private static int sampleSize;
     private static RegulatedMotor lm = new EV3LargeRegulatedMotor(MotorPort.B);
     private static RegulatedMotor rm = new EV3LargeRegulatedMotor(MotorPort.C);
-	
+
     public static void main(String[] args) {
-    	
+
     	// wait for exit
     	Thread thread = new Thread(){
             public void run(){
@@ -40,7 +40,7 @@ public class BrickServer {
             }
         };
         thread.start();
-    	
+
         HelloWorld();
         lm.close();
         rm.close();
@@ -58,7 +58,7 @@ public class BrickServer {
         sampleProvider.fetchSample(sample, 0);
         return sample;
     }
-    
+
     private static void find_path(int x, int y)
     {
     	colorSensor = new EV3ColorSensor(colorSensorPort);
@@ -92,8 +92,8 @@ public class BrickServer {
             i++;
         }
     }
-    
-    
+
+
     private static void startWebSocketServer() {
         WebSocketCallback callback = new WebSocketCallback();
 
@@ -126,16 +126,6 @@ public class BrickServer {
         server.start();
         Log.info("Server started.");
         Log.info("Listening on " + ip + ":8081/ev3");
-        
-        Thread thread = new Thread(){
-            public void run(){
-            	Log.info("Thread started");
-            	if (Button.waitForAnyPress() == Button.ID_ESCAPE) {
-            		System.exit(0);
-            	}
-            }
-        };
-        thread.start();    
     }
 
     private static void HelloWorld(){
