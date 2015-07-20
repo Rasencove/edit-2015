@@ -26,7 +26,7 @@ public class BrickClient {
     //connect to brick bluetooth host
     //private static final String uri = "ws://10.0.1.0:8081/brick";
 
-    private static final String uri = "ws://10.80.49.2:8081/brick";
+    //private static final String uri = "ws://10.80.49.2:8081/brick";
 
     private Session session;
     private Queue<String> commandQueue;
@@ -56,8 +56,6 @@ public class BrickClient {
     @OnMessage
     public void onMessage(String json, Session session) {
         this.session = session;
-        Log.info("Trying to parse JSON:" + json);
-
         try {
             final JsonObject jsonCommand = Json.createReader(new StringReader(json)).readObject();
             System.out.println("Parsed: " + jsonCommand.toString());
@@ -117,8 +115,7 @@ public class BrickClient {
                 Log.info("Command " + command + " doesn't exist.");
             }
         } catch (JsonException je) {
-            System.out.print("Couldn't parse JSON.");
-            System.out.print(je.getMessage());
+            System.out.print(json);
         }
     }
 

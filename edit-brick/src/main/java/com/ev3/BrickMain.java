@@ -13,11 +13,11 @@ import lejos.hardware.Button;
 public class BrickMain {
 
     //connect to brick bluetooth host
-    //private static final String uri = "ws://10.0.1.0:8081/brick";
+    private static final String uri = "ws://10.0.1.11:8080/edit-javaee/brick";
 
-    private static final String uri = "ws://10.80.49.2:8081/brick";
+    //private static final String uri = "ws://10.80.49.2:8081/edit-javaee/brick";
 
-    private Session session;
+    //private Session session;
 
     public static void main(String... argv) {
         final WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
