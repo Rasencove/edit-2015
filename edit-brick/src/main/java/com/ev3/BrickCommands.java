@@ -17,10 +17,12 @@ import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 
+/*
 class Order
 {
     public int x, y, side, getItem;
 }
+*/
 
 public class BrickCommands extends AbstractReceiveListener {
 
